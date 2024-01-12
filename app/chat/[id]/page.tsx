@@ -1,8 +1,19 @@
+import ChatInput from "@/components/ChatInput"
+import ChatWindow from "@/components/ChatWindow"
 
-function ChattingPanel() {
+type Props = {
+  params: {
+    id: string;
+  }
+}
+
+function ChatPage({ params: { id }}:Props) {
   return (
-    <div className="text-3xl text-white font-bold">This is chat page</div>
+    <div className="flex flex-col h-screen overflow-hidden px-2 py-2">
+      <ChatWindow chatId={id} />
+      <ChatInput chatId={id} />
+    </div>
   )
 }
 
-export default ChattingPanel
+export default ChatPage

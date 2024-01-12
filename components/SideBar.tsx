@@ -2,8 +2,8 @@
 
 import { signOut, useSession } from "next-auth/react";
 import NewChatBtn from "./NewChatBtn";
-import { useCollection } from "react-firebase-hooks/firestore"
-import { collection } from "firebase/firestore";
+import { useCollection } from "react-firebase-hooks/firestore";
+import { collection, orderBy, query } from "firebase/firestore";
 import { db } from "@/firebase";
 import ChatRow from "./ChatRow";
 
@@ -11,7 +11,11 @@ function SideBar() {
   const { data: session } = useSession();
 
   const [chats, loading, error] = useCollection(
-    session && collection(db, 'users', session.user?.email!, 'chats')
+    session &&
+      query(
+        collection(db, "users", session.user?.email!, "chats"),
+        orderBy("createdAt", "desc")
+      )
   );
 
   // console.log(chats);
@@ -23,12 +27,17 @@ function SideBar() {
           {/* NewChatBtn */}
           <NewChatBtn />
 
-          <div>{/* ModelSelection */}</div>
+          {/* Future Task */}
+          {/* <div className="hidden sm:inline">
+            <ModelSelection />
+          </div> */}
 
           {/* Map through different chats */}
-          {chats?.docs.map( (chat) => (
-            <ChatRow key={chat.id} id={chat.id} />
-          ))}
+          <div className="my-2">
+            {chats?.docs.map((chat) => (
+              <ChatRow key={chat.id} id={chat.id} />
+            ))}
+          </div>
         </div>
       </div>
       {session && (
